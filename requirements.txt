@@ -2,5 +2,6 @@ streamlit
 tensorflow
 Pillow
 numpy
+matplotlib
 gdown
-opencv-python-headless==4.8.0.76
+# ❌ DO NOT include any opencv-python
