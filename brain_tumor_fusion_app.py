@@ -6,8 +6,9 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 
-# Load model
-model = load_model("brain_tumor_fusion_model.h5")
+import gdown
+gdown.download("https://drive.google.com/uc?id=1861aCqx_bvXRbz7QgR-v4tjSzlFkiTQi", "model.h5", quiet=False)
+model = load_model("model.h5")
 
 # Streamlit UI
 st.set_page_config(page_title="Brain Tumor Detection", page_icon="🧠")
