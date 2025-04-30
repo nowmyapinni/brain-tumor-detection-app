@@ -1,11 +1,10 @@
 import streamlit as st
 import numpy as np
-import cv2 as cv
 from PIL import Image
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
-
+import matplotlib.cm as cm
 import gdown
 gdown.download("https://drive.google.com/uc?id=1861aCqx_bvXRbz7QgR-v4tjSzlFkiTQi", "model.h5", quiet=False)
 model = load_model("model.h5")
@@ -47,12 +46,13 @@ def make_gradcam_heatmap(img_array, tabular_array, model, last_conv_layer_name="
     return heatmap.numpy()
 
 # Overlay heatmap
+
 def overlay_heatmap(original_img, heatmap):
-    img = np.uint8(255 * original_img)
-    heatmap_resized = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
-    heatmap_colored = cv2.applyColorMap(np.uint8(255 * heatmap_resized), cv2.COLORMAP_JET)
-    superimposed_img = cv2.addWeighted(img, 0.6, heatmap_colored, 0.4, 0)
-    return superimposed_img
+    # Resize heatmap to match the image
+    heatmap_resized = Image.fromarray(np.uint8(255 * heatmap)).resize((224, 224))
+    heatmap_colored = cm.jet(np.array(heatmap_resized))[:, :, :3]
+    superimposed = 0.6 * original_img + 0.4 * heatmap_colored
+    return np.uint8(255 * superimposed)
 
 # Prediction
 if uploaded_file is not None:
