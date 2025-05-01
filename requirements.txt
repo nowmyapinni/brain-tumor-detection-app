@@ -1,5 +1,5 @@
-gdown
-opencv-python-headless
-tensorflow
 streamlit
+tensorflow
+opencv-python-headless
+gdown
 Pillow

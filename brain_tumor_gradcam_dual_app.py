@@ -2,14 +2,30 @@
 import streamlit as st
 import numpy as np
 import cv2
+import gdown
+import os
 from PIL import Image
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 
+
 # Load both models
-fusion_model = load_model("brain_tumor_fusion_model.h5")
-cnn_model = load_model("cnn_only_model.h5")
+#fusion_model = load_model("brain_tumor_fusion_model.h5")
+## Load fusion model from Google Drive
+fusion_model_path = "brain_tumor_fusion_model.h5"
+if not os.path.exists(fusion_model_path):
+    gdown.download("https://drive.google.com/uc?id=1861aCqx_bvXRbz7QgR-v4tjSzlFkiTQi", fusion_model_path, quiet=False)
+
+fusion_model = load_model(fusion_model_path)
+
+# Load CNN-only model from Google Drive
+cnn_model_path = "cnn_only_model.h5"
+if not os.path.exists(cnn_model_path):
+    gdown.download("https://drive.google.com/uc?id=1ZxDdaTUVpKMsvYw7mvABdekGI_8SSpQC", cnn_model_path, quiet=False)
+
+cnn_model = load_model(cnn_model_path)
+#cnn_model = load_model("cnn_only_model.h5")
 
 st.set_page_config(page_title="Brain Tumor Detection", page_icon="🧠")
 st.markdown("<h1 style='text-align: center;'>🧠 Brain Tumor Detection with GradCAM</h1>", unsafe_allow_html=True)
