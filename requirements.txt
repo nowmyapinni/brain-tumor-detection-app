@@ -1,7 +1,5 @@
-streamlit
-tensorflow
-Pillow
-numpy
-matplotlib
 gdown
-# ❌ DO NOT include any opencv-python
+opencv-python-headless
+tensorflow
+streamlit
+Pillow
