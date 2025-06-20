@@ -61,25 +61,3 @@ def overlay_heatmap(original_img, heatmap):
     superimposed_img = cv2.addWeighted(img, 0.6, heatmap_colored, 0.4, 0)
     return superimposed_img
 
-if uploaded_file is not None:
-    st.image(uploaded_file, caption="Uploaded MRI", use_column_width=True)
-    img = Image.open(uploaded_file).convert('RGB')
-    img = img.resize((224, 224))
-    img_array = image.img_to_array(img) / 255.0
-    img_input = np.expand_dims(img_array, axis=0)
-
-    tab_input = preprocess_tabular(age, gender, headache)
-
-    fusion_pred = fusion_model.predict([img_input, tab_input])[0][0]
-    fusion_label = "Tumor" if fusion_pred > 0.5 else "No Tumor"
-    confidence = fusion_pred if fusion_pred > 0.5 else 1 - fusion_pred
-
-    st.markdown(f"### 🔮 Fusion Model Prediction: **{fusion_label}**")
-    st.markdown(f"### 🔍 Confidence Score: **{confidence:.2f}**")
-
-    if st.button("Show GradCAM from CNN-only Model (Better Focus)"):
-        cnn_pred = cnn_model.predict(img_input)[0][0]
-        st.markdown(f"### 🧠 CNN-only Model: Prediction = {'Tumor' if cnn_pred > 0.5 else 'No Tumor'}")
-        heatmap = make_gradcam_heatmap(img_input, cnn_model, last_conv_layer_name="conv2d_3")
-        heatmap_img = overlay_heatmap(img_array, heatmap)
-        st.image(heatmap_img, caption="🔥 GradCAM from CNN-only Model", use_column_width=True)
